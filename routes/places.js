@@ -6,14 +6,17 @@ const Place = require('../models/places');
 const User = require('../models/users');
 
 router.post('/newPlace', (req, res) => {
-  const { name, description, tags, zipCode, image } = req.body;
+  const { name, description, tags, zipCode, imageSrc, imageAlt, href } =
+    req.body;
   User.findOne({ token: req.body.token }).then((data) => {
     const newPlace = new Place({
       name: name,
       description: description,
       tags: tags,
       zipCode: zipCode,
-      image: image,
+      imageSrc: imageSrc,
+      imageAlt: imageAlt,
+      href: href,
     });
     newPlace.save().then((placeData) => {
       res.json({ result: true, place: placeData });

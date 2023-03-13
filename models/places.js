@@ -5,7 +5,9 @@ const placeSchema = mongoose.Schema({
   description: String,
   tags: [String],
   zipCode: Number,
-  image: String,
+  imageSrc: String,
+  imageAlt: String,
+  href: String,
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
