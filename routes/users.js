@@ -8,7 +8,7 @@ const uid2 = require('uid2');
 const bcrypt = require('bcrypt');
 
 router.post('/signup', (req, res) => {
-  if (!checkBody(req.body, ['username', 'email', 'password'])) {
+  if (!checkBody(req.body, ['username', 'password'])) {
     res.json({ result: false, error: 'Missing parameters' });
     return;
   }
@@ -40,7 +40,7 @@ router.post('/signin', (req, res) => {
     if (data && bcrypt.compareSync(req.body.password, data.password)) {
       res.json({ result: true, token: data.token });
     } else {
-      res.json({ result: false, error: 'User not found or wrond password' });
+      res.json({ result: false, error: 'User not found or wrong password' });
     }
   });
 });
