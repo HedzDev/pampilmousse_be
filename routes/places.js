@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const { checkBody } = require('../modules/checkBody');
 
 require('../models/connection');
 const Place = require('../models/places');
@@ -8,6 +9,20 @@ const User = require('../models/users');
 router.post('/newPlace', (req, res) => {
   const { name, description, tags, zipCode, imageSrc, imageAlt, href } =
     req.body;
+  if (
+    !checkBody(req.body, [
+      'name',
+      'tags',
+      'zipCode',
+      'imageSrc',
+      'imageAlt',
+      'href',
+    ])
+  ) {
+    res.json({ result: false, error: 'Missing fields' });
+    return;
+  }
+
   User.findOne({ token: req.body.token }).then((data) => {
     const newPlace = new Place({
       name: name,

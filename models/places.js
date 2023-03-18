@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const placeSchema = mongoose.Schema({
   name: String,
   description: String,
-  tags: [String],
+  tags: {},
   zipCode: Number,
   imageSrc: String,
   imageAlt: String,
