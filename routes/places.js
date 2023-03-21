@@ -9,16 +9,7 @@ const User = require('../models/users');
 router.post('/newPlace', (req, res) => {
   const { name, description, tags, zipCode, imageSrc, imageAlt, href } =
     req.body;
-  if (
-    !checkBody(req.body, [
-      'name',
-      'tags',
-      'zipCode',
-      'imageSrc',
-      'imageAlt',
-      'href',
-    ])
-  ) {
+  if (!checkBody(req.body, ['name', 'tags', 'zipCode'])) {
     res.json({ result: false, error: 'Missing fields' });
     return;
   }
