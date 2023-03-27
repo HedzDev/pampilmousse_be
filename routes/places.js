@@ -1,10 +1,19 @@
 var express = require('express');
 var router = express.Router();
 const { checkBody } = require('../modules/checkBody');
+const cloudinary = require('cloudinary').v2;
+const uniqid = require('uniqid');
+const fs = require('fs');
 
 require('../models/connection');
 const Place = require('../models/places');
 const User = require('../models/users');
+
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 router.post('/newPlace', (req, res) => {
   const { name, description, tags, zipCode, imageSrc, imageAlt, href } =
@@ -28,6 +37,20 @@ router.post('/newPlace', (req, res) => {
       res.json({ result: true, place: placeData });
     });
   });
+});
+
+router.post('/upload', async (req, res) => {
+  const picPath = `./tmp/${uniqid()}.jpg`;
+  const resultMove = await req.files.picFromFront.mv(picPath);
+  const resultCloudinary = await cloudinary.uploader.upload(picPath);
+
+  fs.unlinkSync(picPath);
+
+  if (!resultMove) {
+    res.json({ result: true, url: resultCloudinary.secure_url });
+  } else {
+    res.json({ result: false, error: 'Something went wrong' + resultMove });
+  }
 });
 
 router.get('/getPlaces', (req, res) => {
