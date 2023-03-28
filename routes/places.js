@@ -13,11 +13,20 @@ cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true,
 });
 
 router.post('/newPlace', (req, res) => {
-  const { name, description, tags, zipCode, imageSrc, imageAlt, href } =
-    req.body;
+  const {
+    name,
+    description,
+    tags,
+    zipCode,
+    imageSrc,
+    categories,
+    imageAlt,
+    href,
+  } = req.body;
   if (!checkBody(req.body, ['name', 'tags', 'zipCode'])) {
     res.json({ result: false, error: 'Missing fields' });
     return;
@@ -32,6 +41,7 @@ router.post('/newPlace', (req, res) => {
       imageSrc: imageSrc,
       imageAlt: imageAlt,
       href: href,
+      categories: categories,
     });
     newPlace.save().then((placeData) => {
       res.json({ result: true, place: placeData });
@@ -42,7 +52,11 @@ router.post('/newPlace', (req, res) => {
 router.post('/upload', async (req, res) => {
   const picPath = `./tmp/${uniqid()}.jpg`;
   const resultMove = await req.files.picFromFront.mv(picPath);
-  const resultCloudinary = await cloudinary.uploader.upload(picPath);
+  const resultCloudinary = await cloudinary.uploader.upload(picPath, {
+    folder: 'places',
+    use_filename: true,
+    unique_filename: false,
+  });
 
   fs.unlinkSync(picPath);
 
@@ -56,12 +70,6 @@ router.post('/upload', async (req, res) => {
 router.get('/getPlaces', (req, res) => {
   Place.find().then((data) => {
     res.json({ result: true, places: data });
-  });
-});
-
-router.get('/getPlacesByTags/:tag', (req, res) => {
-  Place.findOne({ tag: req.params.tag }).then((data) => {
-    res.json({ result: true, place: data });
   });
 });
 

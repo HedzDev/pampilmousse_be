@@ -8,6 +8,7 @@ const placeSchema = mongoose.Schema({
   imageSrc: String,
   imageAlt: String,
   href: String,
+  categories: {},
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
