@@ -15,10 +15,10 @@ router.post('/send-email', (req, res) => {
     });
 });
 
-const sendEmail = (formData) => {
+const sendEmail = async (formData) => {
   const msg = {
-    to: 'contact@pampilmousse.fr', // Remplacez par votre email professionnel
-    from: 'contact@hedz.space', // Remplacez par votre email vérifié SendGrid
+    to: 'contact@pampilmousse.fr', // Replace with your professional email
+    from: 'contact@hedz.space', // Replace with your verified SendGrid email
     subject: 'Nouveau message depuis pampilmousse.fr',
     text: `
       Nom: ${formData.name}
@@ -27,7 +27,7 @@ const sendEmail = (formData) => {
     `,
   };
 
-  return sgMail.send(msg);
+  return await sgMail.send(msg);
 };
 
 module.exports = router;
